@@ -1,0 +1,15 @@
+# Offloaded tool outputs and local run data
+.cckit/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# macOS
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
+CLAUDE.local.md
