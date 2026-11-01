@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import arms, pricing, state, tagging, transcripts, usage
+from . import arms, offload, pricing, state, tagging, transcripts, usage
 from .config import find_root, lightwork_dir, load_config
 
 
@@ -91,6 +91,24 @@ def cmd_arm(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_run(args: argparse.Namespace) -> int:
+    command = args.cmd[1:] if args.cmd[:1] == ["--"] else args.cmd
+    if not command:
+        print("Usage: lw run -- <command>", file=sys.stderr)
+        return 2
+    root = find_root()
+    settings = load_config(root).get("offload") or {}
+    code, summary = offload.run_command(
+        command,
+        root,
+        settings.get("head_lines", 5),
+        settings.get("tail_lines", 10),
+        settings.get("max_failure_lines", 20),
+    )
+    print(summary)
+    return code
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lw", description="Light Work: measure and cut Claude Code token cost.")
     commands = parser.add_subparsers(dest="command")
@@ -120,6 +138,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("name", nargs="?", help="Arm to switch to (see harness/arms.yaml).")
     p.add_argument("--show", action="store_true", help="Print the active arm.")
     p.set_defaults(func=cmd_arm)
+
+    p = commands.add_parser("run", help="Run a command and print a short summary, saving the full output.")
+    p.add_argument("cmd", nargs=argparse.REMAINDER, help="-- <command>")
+    p.set_defaults(func=cmd_run)
     return parser
 
 

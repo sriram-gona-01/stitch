@@ -22,3 +22,12 @@ packages = ["src/lightwork"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+# Install a real copy of the package, even for `uv sync`'s editable install, and rebuild it
+# when source changes. Something on this Mac sets the hidden flag on dot-folders, and Python
+# skips hidden .pth files, so an editable install alone breaks `uv run lw` at random.
+[tool.hatch.build.targets.wheel.force-include]
+"src/lightwork" = "lightwork"
+
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/**/*.py" }]

@@ -46,3 +46,20 @@ Append-only. Each entry: date, decision, why, and what it rules out.
 **Why:** The switch stays visible in `git diff`, and a fresh clone behaves like plain Claude Code. Timestamps let the tags also cover subagent requests.
 **Known limits:** Project-state imports in `CLAUDE.md` load in every arm, so the baseline isn't byte-for-byte plain Claude Code; the cost is shared by all arms. Two sessions running at once in this repo would share tags, so the protocol runs one at a time.
 **Rules out:** Comparing arms from a session that started before `lw arm` ran.
+
+## 2026-11-01 — Install a real package copy, not only an editable one
+**Decision:** `pyproject.toml` force-includes `src/lightwork` in the installed package and sets uv `cache-keys`, so `uv run` rebuilds it when source changes.
+**Why:** Something on this Mac sets the hidden flag on dot-folders such as `.venv`, and Python 3.12.16 skips hidden `.pth` files, which made `uv run lw` fail intermittently. The cause of the flag wasn't found. Tests and hooks don't use the installed copy.
+**Rules out:** Relying on the editable `.pth` alone.
+
+## 2026-11-01 — Verification gate semantics
+**Verified in the hooks reference:** `stop_hook_active` is true "when Claude Code is already continuing as a result of a stop hook". Claude Code also caps stop-hook continuations at 8 in a row. The gate exits without blocking when the flag is set, so it blocks at most once per stop.
+**Decision:** The gate always exits 0 and signals with JSON, and hook commands end in `|| true`, because Python exits 2 for a missing script and exit 2 from a Stop hook would block.
+**Default check:** `compileall`, because the project has no linter dependency. Change `verify.fast_cmd` to add one.
+
+## 2026-11-01 — Headroom arm is blocked, pending a test
+**Decision:** The `headroom` arm is marked blocked in `harness/arms.yaml`. Headroom was not installed or run.
+**Why:** The README and docs (checked 2026-11-01) don't state that `headroom wrap claude` works with a subscription login. The closest statements are for the VS Code wrapper: it works "without changing your Anthropic sign-in" and "does not store or replace your Anthropic credentials". No matching GitHub issue was found. Separately, the proxy docs say `ANTHROPIC_UNIX_SOCKET` makes Claude Code treat the session as API-key auth, so auth does depend on how it's connected.
+**Would also affect results:** `wrap` installs Serena and can write `ANTHROPIC_BASE_URL` and `ENABLE_TOOL_SEARCH` into `~/.claude/settings.json`, all of which change behavior beyond compression.
+**To unblock:** Decide whether to route subscription traffic through this local proxy, test `HEADROOM_BEACON=off headroom wrap claude`, confirm the session stays on the subscription, then replace `blocked` with `launch` in `arms.yaml`.
+**Rules out:** Workarounds such as switching to API-key auth just to make the arm run.
