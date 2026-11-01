@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import advisor, arms, offload, pricing, state, tagging, transcripts, usage
+from . import advisor, arms, offload, pricing, report, state, tagging, transcripts, usage
 from .config import find_root, lightwork_dir, load_config
 
 
@@ -130,6 +130,24 @@ def cmd_advise(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_report(args: argparse.Namespace) -> int:
+    root = find_root()
+    tasks = root / "docs" / "context" / "tasks.md"
+    guardrails = report.parse_guardrails(tasks.read_text()) if tasks.exists() else []
+    text = report.build_report(
+        _requests(root),
+        pricing.load_prices(root / "pricing.yaml"),
+        guardrails,
+        [f for f in args.features.split(",") if f],
+        [a for a in args.arms.split(",") if a],
+    )
+    path = Path(args.out) if args.out else root / "results" / "report.md"
+    report.write_report(text, path)
+    print(text)
+    print(f"Written to {path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lw", description="Light Work: measure and cut Claude Code token cost.")
     commands = parser.add_subparsers(dest="command")
@@ -164,6 +182,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--feature", help="Feature to use; defaults to the current one.")
     p.add_argument("--turns", type=int, help="Turns you expect remain; defaults to measured or configured value.")
     p.set_defaults(func=cmd_advise)
+
+    p = commands.add_parser("report", help="Compare arms per feature in a Markdown table.")
+    p.add_argument("--features", required=True, help="Comma-separated feature ids.")
+    p.add_argument("--arms", required=True, help="Comma-separated arm names.")
+    p.add_argument("--out", help="Output path; defaults to results/report.md.")
+    p.set_defaults(func=cmd_report)
 
     p = commands.add_parser("run", help="Run a command and print a short summary, saving the full output.")
     p.add_argument("cmd", nargs=argparse.REMAINDER, help="-- <command>")
