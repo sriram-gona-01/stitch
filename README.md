@@ -1,5 +1,9 @@
 # Light Work
 
+[![Light Work: open the animated page](site/banner.svg)](https://sriram-gona-01.github.io/light-work/)
+
+**[Open the project page →](https://sriram-gona-01.github.io/light-work/)**
+
 A harness for [Claude Code](https://code.claude.com/docs) that aims to cut the token cost of developing a feature without lowering quality. The main session stays on one model with a warm prompt cache, and other work goes to cheaper models through subagents that get just the context they need from files.
 
 - **Main metric:** cost-weighted tokens per feature lifecycle (plan → build → test).
@@ -67,6 +71,7 @@ harness/         agent definitions, CLAUDE.md fragments, arms.yaml
 src/lightwork/   the lw CLI and hook scripts
 docs/            spec, context files, templates, experiment protocol
 results/         shareable aggregates
+site/            the project page, deployed to GitHub Pages
 tests/           pytest suite with synthetic fixtures
 ```
 

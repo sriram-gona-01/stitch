@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" width="900" height="200" role="img" aria-label="Light Work: open the animated project page">
+  <style>
+    .bg { fill: #f5f0e6; } .ink { fill: #1d1a15; } .muted { fill: #625b4f; }
+    .warm { fill: #c8551b; } .cool { fill: #1b6f5c; } .line { stroke: #cfc6b4; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #161411; } .ink { fill: #f1eadc; } .muted { fill: #a79e8d; }
+      .warm { fill: #ee7a3c; } .cool { fill: #4fbfa4; } .line { stroke: #3a352c; }
+    }
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .title { font-family: "Iowan Old Style", Palatino, Georgia, serif; font-size: 54px; font-weight: 500; }
+    .halo { transform-box: fill-box; transform-origin: center; animation: halo 3.2s ease-in-out infinite; opacity: .18; }
+    @keyframes halo { 50% { transform: scale(1.14); opacity: .3; } }
+    .dot { offset-rotate: 0deg; animation: travel 2.8s ease-in-out infinite; }
+    .a { offset-path: path("M700 100 L840 42"); }
+    .b { offset-path: path("M700 100 L860 100"); animation-delay: .9s; }
+    .c { offset-path: path("M700 100 L840 158"); animation-delay: 1.8s; }
+    @keyframes travel { 0% { offset-distance: 0%; opacity: 0; } 8% { opacity: 1; } 50% { offset-distance: 100%; opacity: 1; } 58%, 100% { offset-distance: 100%; opacity: 0; } }
+    .back { animation-name: travelback; }
+    @keyframes travelback { 0%, 50% { offset-distance: 100%; opacity: 0; } 58% { opacity: 1; } 100% { offset-distance: 0%; opacity: 0; } }
+  </style>
+  <rect class="bg" width="900" height="200" rx="14"/>
+  <text class="title ink" x="44" y="88">Light Work</text>
+  <text class="muted" x="46" y="124" font-size="18">Keep the main session warm. Send everything else somewhere cheaper.</text>
+  <text class="warm" x="46" y="160" font-size="17" font-weight="600">Open the animated page →</text>
+  <g stroke-width="1.5">
+    <line class="line" x1="700" y1="100" x2="840" y2="42"/>
+    <line class="line" x1="700" y1="100" x2="860" y2="100"/>
+    <line class="line" x1="700" y1="100" x2="840" y2="158"/>
+  </g>
+  <circle class="warm halo" cx="700" cy="100" r="46"/>
+  <circle class="warm" cx="700" cy="100" r="32"/>
+  <circle class="ink" cx="840" cy="42" r="8"/>
+  <circle class="ink" cx="860" cy="100" r="8"/>
+  <circle class="ink" cx="840" cy="158" r="8"/>
+  <circle class="warm dot a" r="5"/>
+  <circle class="warm dot b" r="5"/>
+  <circle class="warm dot c" r="5"/>
+  <circle class="cool dot back a" r="3.5"/>
+  <circle class="cool dot back b" r="3.5"/>
+  <circle class="cool dot back c" r="3.5"/>
+</svg>
