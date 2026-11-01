@@ -228,7 +228,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <h2 class="reveal">Five small layers, each easy to swap.</h2>
   <ol class="layers">
     <li class="reveal"><em>1</em><strong>Measure</strong><span>Reads Claude Code transcripts, removes duplicate usage, and tags every request by feature, phase, arm, and agent.</span></li>
-    <li class="reveal"><em>2</em><strong>Shrink</strong><span><code>lw run</code> saves long command output to a file and prints a short summary. Headroom is an optional arm, blocked because its docs don't confirm subscription login, and it hasn't been tested yet.</span></li>
+    <li class="reveal"><em>2</em><strong>Shrink</strong><span><code>lw run</code> saves long command output to a file and prints a short summary.</span></li>
     <li class="reveal"><em>3</em><strong>Organize</strong><span>A lean <code>CLAUDE.md</code>, state files, brief and summary templates, a five-agent roster, and a verification gate.</span></li>
     <li class="reveal"><em>4</em><strong>Decide</strong><span>A break-even advisor compares staying, delegating, restarting, and compacting in plain numbers. It recommends and never switches.</span></li>
     <li class="reveal"><em>5</em><strong>Prove</strong><span>Arms from plain Claude Code to the full harness, a written experiment protocol, and a report with quality guardrails beside the cost.</span></li>
@@ -333,8 +333,7 @@ uv run lw usage --feature F1 --by agent</code></pre>
     baseline: { on: ['event log'], note: 'Plain Claude Code with logging only. No agents, behavior hooks, or routing rules.' },
     verify:   { on: ['event log', 'test-writer', 'test-runner', 'stop gate'], note: 'Adds test agents and a Stop hook that sends Claude back once if the fast check fails.' },
     route:    { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer'], note: 'Adds routing rules, so work is delegated to the cheapest capable agent.' },
-    offload:  { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Adds guidance to run long commands through lw run, keeping their output out of context.' },
-    headroom: { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Would add Headroom compression. Blocked: its docs don\'t confirm subscription login, and it hasn\'t been tested yet.' }
+    offload:  { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Adds guidance to run long commands through lw run, keeping their output out of context.' }
   };
 
   var CENTER = { x: 240, y: 240 };
