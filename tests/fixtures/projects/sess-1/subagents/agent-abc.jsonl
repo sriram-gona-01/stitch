@@ -1,0 +1,2 @@
+{"type":"assistant","sessionId":"sess-1","requestId":"req-4","timestamp":"2026-01-01T00:00:04Z","isSidechain":true,"message":{"id":"msg-4","model":"model-b","usage":{"input_tokens":7,"output_tokens":8}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-5","timestamp":"2026-01-01T00:00:05Z","isSidechain":true,"message":{"id":"msg-5","model":"model-b","usage":{"input_tokens":6,"output_tokens":6,"cache_read_input_tokens":50}}}

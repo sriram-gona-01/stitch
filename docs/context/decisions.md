@@ -37,3 +37,6 @@ Append-only. Each entry: date, decision, why, and what it rules out.
 **Decision:** The GitHub repo was renamed `stitch` → `light-work` and the local folder likewise. The scaffold history was merged into it without a force-push. The private `claude-code-context-kit` repo is left as it was, no longer used.
 **Why:** The scaffold had been pushed to a separate repo before the rename.
 **Rules out:** Pushing further work to `claude-code-context-kit`.
+
+## 2026-11-01 — Hook input fields
+**Verified in the hooks reference:** PostToolUse carries `tool_response` (Bash: `stdout`, `stderr`); SubagentStop carries `agent_id`, `agent_type`, `agent_transcript_path`. The logging hook records sizes and names only.

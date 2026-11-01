@@ -1,0 +1,10 @@
+{"type":"user","sessionId":"sess-1","timestamp":"2026-01-01T00:00:00Z","message":{"role":"user","content":"synthetic"}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-1","timestamp":"2026-01-01T00:00:01Z","isSidechain":false,"message":{"id":"msg-1","model":"model-a","usage":{"input_tokens":10,"output_tokens":5,"cache_creation_input_tokens":100,"cache_read_input_tokens":200}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-1","timestamp":"2026-01-01T00:00:01Z","isSidechain":false,"message":{"id":"msg-1","model":"model-a","usage":{"input_tokens":10,"output_tokens":20,"cache_creation_input_tokens":100,"cache_read_input_tokens":200}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-2","timestamp":"2026-01-01T00:00:02Z","isSidechain":false,"message":{"id":"msg-2","model":"model-a","usage":{"input_tokens":1,"output_tokens":2}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-3","timestamp":"2026-01-01T00:00:03Z","isSidechain":true,"agentId":"inline","message":{"id":"msg-3","model":"model-b","usage":{"input_tokens":3,"output_tokens":4,"cache_read_input_tokens":0}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-4","timestamp":"2026-01-01T00:00:04Z","isSidechain":true,"agentId":"abc","message":{"id":"msg-4","model":"model-b","usage":{"input_tokens":7,"output_tokens":8}}}
+{"type":"assistant","sessionId":"sess-1","requestId":"req-9","message":{"id":"msg-9","model":"<synthetic>","usage":{"input_tokens":99,"output_tokens":99}}}
+{"type":"assistant","sessionId":"sess-1","message":{"id":"msg-no-usage","model":"model-a"}}
+{"type":"api-request","sessionId":"sess-1"}
+not json

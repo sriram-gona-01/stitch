@@ -2,11 +2,11 @@
 paths:
   # Every path this repo has lived at, so transcripts from before a rename are still found.
   aliases:
-    - /Users/sriramgona/Desktop/AI_Eng_RM/projects/stitch
-    - /Users/sriramgona/Desktop/AI_Eng_RM/projects/light-work
+    - ~/Desktop/AI_Eng_RM/projects/stitch
+    - ~/Desktop/AI_Eng_RM/projects/light-work
 verify:
   # Fast check run by the Stop gate (lint / type-check, not the full test suite).
-  fast_cmd: "uv run python -m compileall -q src tests"
+  fast_cmd: ".venv/bin/python -m compileall -q src tests"
   timeout_seconds: 30
   max_failure_lines: 20
 offload:
