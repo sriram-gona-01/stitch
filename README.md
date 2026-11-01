@@ -1,4 +1,4 @@
-# Claude Code Context Kit
+# Light Work
 
 A framework for developing applications with Claude Code that **holds context across sessions** and **routes work to the cheapest capable model** without breaking the prompt cache.
 

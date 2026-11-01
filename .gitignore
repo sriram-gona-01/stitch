@@ -1,10 +1,14 @@
-# Offloaded tool outputs and local run data
-.cckit/
+# Local harness state and raw data (never commit transcripts or usage dumps)
+.lightwork/
+data/raw/
+*.jsonl
+!tests/fixtures/**/*.jsonl
 
 # Python
 __pycache__/
 *.pyc
 .venv/
+.pytest_cache/
 .env
 
 # macOS

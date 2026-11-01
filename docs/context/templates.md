@@ -42,5 +42,5 @@ Any decision made, with the reason. (Copied into decisions.md by the main sessio
 Anything that needs the main session or the user.
 
 ## Evidence
-Test results, command outputs (or paths to them in .cckit/outputs/).
+Test results, command outputs (or paths to them in .lightwork/offload/).
 ```

@@ -1,0 +1,9 @@
+# Prices in USD per million tokens. Fill these in from Anthropic's pricing page.
+# `lw usage` refuses to report cost while a model used in the data has no complete price.
+source: https://www.anthropic.com/pricing
+as_of: null  # YYYY-MM-DD
+models:
+  # Keys match `message.model` in transcripts exactly.
+  claude-opus-5-5: {input: null, output: null, cache_write: null, cache_read: null}
+  claude-sonnet-5-5: {input: null, output: null, cache_write: null, cache_read: null}
+  claude-haiku-5-5: {input: null, output: null, cache_write: null, cache_read: null}

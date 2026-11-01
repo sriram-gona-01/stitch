@@ -1,0 +1,18 @@
+# Light Work configuration.
+paths:
+  # Every path this repo has lived at, so transcripts from before a rename are still found.
+  aliases:
+    - /Users/sriramgona/Desktop/AI_Eng_RM/projects/stitch
+    - /Users/sriramgona/Desktop/AI_Eng_RM/projects/light-work
+verify:
+  # Fast check run by the Stop gate (lint / type-check, not the full test suite).
+  fast_cmd: "uv run python -m compileall -q src tests"
+  timeout_seconds: 30
+  max_failure_lines: 20
+offload:
+  head_lines: 5
+  tail_lines: 10
+  max_failure_lines: 20
+advisor:
+  # Context size (tokens) at which the optional advisory hook adds a one-line note.
+  context_warn_tokens: 150000

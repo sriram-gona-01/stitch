@@ -1,4 +1,4 @@
-# CLAUDE.md — Claude Code Context Kit
+# CLAUDE.md — Light Work
 
 This repo builds a framework for context-preserving, cost-aware development with Claude Code. It also uses that framework on itself.
 
@@ -37,7 +37,7 @@ Handle small edits (a few lines, one file) directly in the main session. Delegat
 
 ## Large outputs
 
-When a command or tool output is large (logs, test runs, long JSON), write it to `.cckit/outputs/` and keep only a short summary plus the file path in context. Read the file again only when a detail is needed.
+When a command or tool output is large (logs, test runs, long JSON), write it to `.lightwork/offload/` and keep only a short summary plus the file path in context. Read the file again only when a detail is needed.
 
 ## End of every session
 
