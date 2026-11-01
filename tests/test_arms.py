@@ -96,3 +96,12 @@ def test_unknown_blocked_and_missing_marker_errors(repo):
     (repo / "CLAUDE.md").write_text("no block")
     with pytest.raises(arms.ArmError):
         arms.apply_arm(repo, "x")
+
+
+def test_advisor_hook_only_when_enabled_and_never_in_baseline(repo):
+    path = repo / "lightwork.yaml"
+    path.write_text(path.read_text().replace("hook_enabled: false", "hook_enabled: true"))
+    arms.apply_arm(repo, "baseline")
+    assert "advise_hook" not in json.dumps(settings(repo))
+    arms.apply_arm(repo, "route")
+    assert "advise_hook" in json.dumps(settings(repo))

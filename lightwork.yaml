@@ -14,5 +14,14 @@ offload:
   tail_lines: 10
   max_failure_lines: 20
 advisor:
-  # Context size (tokens) at which the optional advisory hook adds a one-line note.
+  # Add a one-line advisory to prompts in non-baseline arms. Off by default, so experiments stay clean.
+  hook_enabled: false
+  # Context size (tokens) at which the advisory fires.
   context_warn_tokens: 150000
+  # Estimates used until there is measured data. `lw advise` prints them.
+  brief_tokens: 500
+  handoff_tokens: 2000
+  compact_tokens: 6000
+  default_remaining_turns: 10
+  # Recommend a change only if it saves at least this fraction versus staying.
+  min_saving: 0.1

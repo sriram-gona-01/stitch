@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import arms, offload, pricing, state, tagging, transcripts, usage
+from . import advisor, arms, offload, pricing, state, tagging, transcripts, usage
 from .config import find_root, lightwork_dir, load_config
 
 
@@ -109,6 +109,27 @@ def cmd_run(args: argparse.Namespace) -> int:
     return code
 
 
+def cmd_advise(args: argparse.Namespace) -> int:
+    root = find_root()
+    current = state.load_state(root)
+    settings = load_config(root).get("advisor") or {}
+    try:
+        print(
+            advisor.advise(
+                _requests(root),
+                pricing.load_prices(root / "pricing.yaml"),
+                settings,
+                feature=args.feature or current.get("feature") or "",
+                phase=current.get("phase") or "",
+                remaining_turns=args.turns,
+            )
+        )
+    except (advisor.NoDataError, pricing.MissingPriceError) as error:
+        print(f"No advice: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lw", description="Light Work: measure and cut Claude Code token cost.")
     commands = parser.add_subparsers(dest="command")
@@ -138,6 +159,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("name", nargs="?", help="Arm to switch to (see harness/arms.yaml).")
     p.add_argument("--show", action="store_true", help="Print the active arm.")
     p.set_defaults(func=cmd_arm)
+
+    p = commands.add_parser("advise", help="Recommend staying, delegating, a fresh session, or compacting.")
+    p.add_argument("--feature", help="Feature to use; defaults to the current one.")
+    p.add_argument("--turns", type=int, help="Turns you expect remain; defaults to measured or configured value.")
+    p.set_defaults(func=cmd_advise)
 
     p = commands.add_parser("run", help="Run a command and print a short summary, saving the full output.")
     p.add_argument("cmd", nargs=argparse.REMAINDER, help="-- <command>")
