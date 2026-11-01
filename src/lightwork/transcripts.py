@@ -30,6 +30,9 @@ class Request:
     output_tokens: int = 0
     cache_write_tokens: int = 0
     cache_read_tokens: int = 0
+    feature: str = ""
+    phase: str = ""
+    arm: str = ""
 
     def to_row(self) -> dict:
         return asdict(self)

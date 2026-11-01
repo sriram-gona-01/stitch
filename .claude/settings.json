@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "SessionStart": [{"hooks": [{"type": "command", "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/python\" -IS \"$CLAUDE_PROJECT_DIR/src/lightwork/hooks/log_event.py\"", "timeout": 5}]}],
+    "PostToolUse": [{"hooks": [{"type": "command", "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/python\" -IS \"$CLAUDE_PROJECT_DIR/src/lightwork/hooks/log_event.py\"", "timeout": 5}]}],
+    "SubagentStop": [{"hooks": [{"type": "command", "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/python\" -IS \"$CLAUDE_PROJECT_DIR/src/lightwork/hooks/log_event.py\"", "timeout": 5}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": "\"$CLAUDE_PROJECT_DIR/.venv/bin/python\" -IS \"$CLAUDE_PROJECT_DIR/src/lightwork/hooks/log_event.py\"", "timeout": 5}]}]
+  }
+}

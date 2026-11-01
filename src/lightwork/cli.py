@@ -6,14 +6,16 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import pricing, transcripts, usage
+from . import pricing, state, tagging, transcripts, usage
 from .config import find_root, lightwork_dir, load_config
 
 
 def _requests(root: Path) -> list[transcripts.Request]:
     aliases = (load_config(root).get("paths") or {}).get("aliases") or []
-    live = transcripts.load_requests(transcripts.project_dirs(root, aliases))
-    return usage.merge_with_snapshots(live, usage.load_snapshots(lightwork_dir(root) / "snapshots"))
+    events = tagging.read_events(state.events_path(root))
+    live = transcripts.load_requests(transcripts.project_dirs(root, aliases), tagging.agent_names(events))
+    merged = usage.merge_with_snapshots(live, usage.load_snapshots(lightwork_dir(root) / "snapshots"))
+    return tagging.tag_requests(merged, events)
 
 
 def cmd_usage(args: argparse.Namespace) -> int:
@@ -21,6 +23,8 @@ def cmd_usage(args: argparse.Namespace) -> int:
     requests = _requests(root)
     if args.session:
         requests = [r for r in requests if r.session_id == args.session]
+    if args.feature:
+        requests = [r for r in requests if r.feature == args.feature]
     if args.since:
         requests = [r for r in requests if r.timestamp[:10] >= args.since]
     if not requests:
@@ -28,7 +32,12 @@ def cmd_usage(args: argparse.Namespace) -> int:
         return 1
 
     prices = pricing.load_prices(root / "pricing.yaml")
-    keys = {"model": lambda r: r.model, "agent": lambda r: r.agent}
+    keys = {
+        "model": lambda r: r.model,
+        "agent": lambda r: r.agent,
+        "arm": lambda r: r.arm,
+        "phase": lambda r: r.phase or "(none)",
+    }
     rows = usage.aggregate(requests, prices, keys.get(args.by))
     print(usage.format_table(rows, args.by or "group"))
 
@@ -47,19 +56,46 @@ def cmd_snapshot(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_feature(args: argparse.Namespace) -> int:
+    root = find_root()
+    try:
+        if args.action == "start":
+            current = state.feature_start(root, args.id, args.phase)
+        elif args.action == "phase":
+            current = state.feature_phase(root, args.phase_name)
+        else:
+            current = state.feature_end(root)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
+    print(f"feature={current.get('feature')} phase={current.get('phase')}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lw", description="Light Work: measure and cut Claude Code token cost.")
     commands = parser.add_subparsers(dest="command")
 
     p = commands.add_parser("usage", help="Report tokens, cache-hit ratio, and cost.")
     p.add_argument("--session", help="Only this session id.")
+    p.add_argument("--feature", help="Only this feature id.")
     p.add_argument("--since", help="Only requests on or after this date (YYYY-MM-DD).")
-    p.add_argument("--by", choices=["model", "agent"], help="Group rows by this field.")
+    p.add_argument("--by", choices=["model", "agent", "arm", "phase"], help="Group rows by this field.")
     p.add_argument("--csv", help="Also write the rows to this CSV path.")
     p.set_defaults(func=cmd_usage)
 
     p = commands.add_parser("snapshot", help="Save per-request usage (no content) so cleanup can't lose it.")
     p.set_defaults(func=cmd_snapshot)
+
+    p = commands.add_parser("feature", help="Tag work with a feature and phase.")
+    actions = p.add_subparsers(dest="action", required=True)
+    start = actions.add_parser("start", help="Start a feature.")
+    start.add_argument("id")
+    start.add_argument("--phase", choices=state.PHASES, default="plan")
+    phase = actions.add_parser("phase", help="Move the current feature to a phase.")
+    phase.add_argument("phase_name", choices=state.PHASES)
+    actions.add_parser("end", help="End the current feature.")
+    p.set_defaults(func=cmd_feature)
     return parser
 
 
