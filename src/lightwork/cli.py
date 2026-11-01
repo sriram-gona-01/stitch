@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import pricing, state, tagging, transcripts, usage
+from . import arms, pricing, state, tagging, transcripts, usage
 from .config import find_root, lightwork_dir, load_config
 
 
@@ -72,6 +72,25 @@ def cmd_feature(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_arm(args: argparse.Namespace) -> int:
+    root = find_root()
+    if args.show or not args.name:
+        print(arms.active_arm(root))
+        return 0
+    try:
+        arm = arms.apply_arm(root, args.name)
+    except arms.ArmError as error:
+        print(error, file=sys.stderr)
+        return 1
+    print(f"Arm is now {arm.name}: {arm.description}")
+    print(f"agents: {', '.join(arm.agents) or '(none)'}")
+    print(f"fragments: {', '.join(arm.fragments) or '(none)'}")
+    if arm.launch:
+        print(f"launch with: {arm.launch}")
+    print("Start a fresh Claude Code session: agents and hooks load at session start.")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lw", description="Light Work: measure and cut Claude Code token cost.")
     commands = parser.add_subparsers(dest="command")
@@ -96,6 +115,11 @@ def build_parser() -> argparse.ArgumentParser:
     phase.add_argument("phase_name", choices=state.PHASES)
     actions.add_parser("end", help="End the current feature.")
     p.set_defaults(func=cmd_feature)
+
+    p = commands.add_parser("arm", help="Switch or show the active experiment arm.")
+    p.add_argument("name", nargs="?", help="Arm to switch to (see harness/arms.yaml).")
+    p.add_argument("--show", action="store_true", help="Print the active arm.")
+    p.set_defaults(func=cmd_arm)
     return parser
 
 

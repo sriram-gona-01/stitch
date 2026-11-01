@@ -40,3 +40,9 @@ Append-only. Each entry: date, decision, why, and what it rules out.
 
 ## 2026-11-01 — Hook input fields
 **Verified in the hooks reference:** PostToolUse carries `tool_response` (Bash: `stdout`, `stderr`); SubagentStop carries `agent_id`, `agent_type`, `agent_transcript_path`. The logging hook records sizes and names only.
+
+## 2026-11-01 — How arms and tags work
+**Decision:** `lw arm` edits only a marked block in `CLAUDE.md`, `.claude/agents/`, and Light Work's own entries in `.claude/settings.json`. The repo is committed in `baseline`. Requests get the feature, phase, and arm of the latest `lw` marker at or before their timestamp.
+**Why:** The switch stays visible in `git diff`, and a fresh clone behaves like plain Claude Code. Timestamps let the tags also cover subagent requests.
+**Known limits:** Project-state imports in `CLAUDE.md` load in every arm, so the baseline isn't byte-for-byte plain Claude Code; the cost is shared by all arms. Two sessions running at once in this repo would share tags, so the protocol runs one at a time.
+**Rules out:** Comparing arms from a session that started before `lw arm` ran.

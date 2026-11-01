@@ -1,0 +1,25 @@
+# Each arm is one experiment condition. `extends` inherits a previous arm's lists.
+# Hook names are defined in src/lightwork/arms.py.
+arms:
+  baseline:
+    description: Plain Claude Code. Logging only; no agents, behavior hooks, or routing rules.
+    agents: []
+    fragments: []
+    hooks: [log]
+  verify:
+    extends: baseline
+    description: Adds test agents and the verification gate.
+    agents: [test-runner, test-writer]
+    hooks: [verify_gate]
+  route:
+    extends: verify
+    description: Adds delegation to cheaper models.
+    agents: [scout, implementer, reviewer]
+    fragments: [routing]
+  offload:
+    extends: route
+    description: Adds guidance to offload long command output.
+    fragments: [offload]
+  headroom:
+    extends: offload
+    description: Adds Headroom compression (optional; see docs/context/decisions.md).
