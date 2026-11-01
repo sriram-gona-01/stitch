@@ -22,4 +22,5 @@ arms:
     fragments: [offload]
   headroom:
     extends: offload
-    description: Adds Headroom compression (optional; see docs/context/decisions.md).
+    description: Adds Headroom compression (optional).
+    blocked: Subscription login is unconfirmed; see "Headroom arm is blocked" in docs/context/decisions.md.

@@ -25,6 +25,11 @@ def settings(repo):
     return json.loads((repo / ".claude" / "settings.json").read_text())
 
 
+def test_headroom_arm_is_blocked_until_tested(repo):
+    with pytest.raises(arms.ArmError, match="blocked"):
+        arms.apply_arm(repo, "headroom")
+
+
 def test_arm_inheritance():
     loaded = arms.load_arms(REPO)
     assert loaded["baseline"].agents == () and loaded["baseline"].hooks == ("log",)
