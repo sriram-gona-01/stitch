@@ -3,7 +3,7 @@
 Updated at the end of every session.
 
 ## In progress
-- Phase 0: repo setup and measurement baseline
+- MVP build: `docs/BUILD_MVP.md`
 
 ## Next
 - [ ] Follow `docs/BUILD_MVP.md` milestones M0–M7

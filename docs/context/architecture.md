@@ -1,23 +1,23 @@
 # Architecture
 
-Current state of the framework. Update when structure changes.
+Five small, separate layers. Each can be swapped without touching the others.
 
-## Components
-
-| Component | Location | Status |
+| Layer | What it does | Where |
 |---|---|---|
-| Main-session rules | `CLAUDE.md` | Drafted |
-| Subagent roster | `.claude/agents/` | Drafted (4 agents) |
-| Handoff templates | `docs/context/templates.md` | Drafted |
-| Durable state files | `docs/context/` | Drafted |
-| Usage analyzer | `scripts/` | Not started (Phase 0) |
-| Output offloading | hooks | Not started (Phase 2) |
-| Experiment runner | Claude Agent SDK | Not started (Phase 3) |
+| Measure | Parse and deduplicate transcripts, log hook events, tag by feature, phase, and arm | `transcripts.py`, `usage.py`, `pricing.py`, `tagging.py`, `state.py`, `hooks/log_event.py` |
+| Shrink | Offload long command output; optional Headroom arm | `offload.py`, `harness/claude-md/offload.md` |
+| Organize | Lean `CLAUDE.md`, state files, templates, agent roster, verification gate | `docs/context/`, `docs/templates/`, `harness/agents/`, `hooks/verify_gate.py` |
+| Decide | Break-even advisor that recommends and never switches | `advisor.py`, `hooks/advise_hook.py` |
+| Prove | Arm switching, experiment protocol, report | `arms.py`, `harness/arms.yaml`, `docs/experiments/protocol.md`, `report.py` |
 
-## How a task flows
+## How an arm takes effect
 
-1. Main session reads `tasks.md` and `decisions.md`.
-2. Main session writes a brief and delegates to the right subagent.
-3. Subagent works in its own context window and returns a summary.
-4. Main session updates `tasks.md` and `decisions.md`.
-5. Hooks and transcripts record tokens, cache usage, and cost per agent.
+`lw arm <name>` copies agents from `harness/agents/` to `.claude/agents/`, rewrites the marked import block in `CLAUDE.md`, updates the hook entries in `.claude/settings.json`, and records the arm and hook settings in `.lightwork/state.json`. A fresh session then picks it all up.
+
+## How a request gets its tags
+
+`lw feature` and `lw arm` append markers to `.lightwork/events.jsonl`. The analyzer deduplicates requests from transcripts and snapshots, then gives each one the tags of the latest marker at or before its timestamp.
+
+## Hook rules
+
+Hooks use the standard library only, run in under 200 ms (except the verification gate, which runs the configured check), never record content, and fail open.
