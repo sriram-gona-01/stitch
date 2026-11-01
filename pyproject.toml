@@ -1,7 +1,7 @@
 [project]
 name = "light-work"
 version = "0.1.0"
-description = "A harness for Claude Code that cuts token cost per feature without lowering quality."
+description = "An experiment in cutting Claude Code's token cost without cutting quality."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["pyyaml>=6"]

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Light Work</title>
-<meta name="description" content="A harness for Claude Code that aims to cut the token cost of developing a feature without lowering quality.">
+<meta name="description" content="An experiment in cutting Claude Code's token cost without cutting quality.">
 <meta property="og:title" content="Light Work">
-<meta property="og:description" content="Keep the main session warm. Send everything else somewhere cheaper. An open harness for Claude Code.">
+<meta property="og:description" content="An experiment in cutting Claude Code's token cost without cutting quality.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23c8551b'/%3E%3C/svg%3E">
 <style>
@@ -112,12 +112,12 @@ h2 { font: 500 clamp(32px, 4.6vw, 52px)/1.08 var(--serif); letter-spacing: -0.01
 .caret { display: inline-block; width: 8px; height: 1em; background: var(--term-ink); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
 .note { font-size: 14px; color: var(--muted); margin: 12px 0 0; }
 
-.progress { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px; }
+.progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
 .progress h3 { font: 600 18px var(--sans); margin: 0 0 8px; }
 .progress ul { list-style: none; margin: 0; padding: 0; }
 .progress li { padding: 11px 0 11px 28px; border-top: 1px solid var(--line); position: relative; }
 .progress li::before { content: ""; position: absolute; left: 3px; top: 19px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--cool); }
-.progress .done li::before { background: var(--cool); }
+.progress .validated li::before { background: var(--cool); }
 .progress .todo li::before { border-color: var(--warm); }
 
 .quick { position: relative; }
@@ -140,6 +140,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: minmax(0, 1fr); gap: 42px; padding-bottom: 64px; }
+  .progress { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   section { padding: 64px 0; }
 }
 @media (max-width: 680px) {
@@ -147,8 +148,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   body { font-size: 16px; }
   nav .links a.hide { display: none; }
   .lede { font-size: 18px; }
-  .lanes, .progress { grid-template-columns: minmax(0, 1fr); }
-  .progress { gap: 30px; }
+  .lanes { grid-template-columns: minmax(0, 1fr); }
   .layers li { grid-template-columns: 38px minmax(0, 1fr); gap: 2px 8px; }
   .layers span { grid-column: 2; }
   .term pre { font-size: 12.5px; padding: 14px; }
@@ -178,7 +178,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <header class="hero" id="top">
     <div>
       <h1><span>Heavy models.</span><span>Light work.</span></h1>
-      <p class="lede">A harness for Claude Code that aims to cut the token cost of building a feature, without lowering quality. Your main session stays warm. Everything else goes somewhere cheaper.</p>
+      <p class="lede">An experiment in cutting Claude Code's token cost without cutting quality. The main session stays warm. Everything else goes somewhere cheaper.</p>
       <div class="actions">
         <a class="btn solid" href="https://github.com/sriram-gona-01/light-work">View on GitHub</a>
         <a class="btn" href="#start">Quickstart</a>
@@ -228,7 +228,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <h2 class="reveal">Five small layers, each easy to swap.</h2>
   <ol class="layers">
     <li class="reveal"><em>1</em><strong>Measure</strong><span>Reads Claude Code transcripts, removes duplicate usage, and tags every request by feature, phase, arm, and agent.</span></li>
-    <li class="reveal"><em>2</em><strong>Shrink</strong><span><code>lw run</code> saves long command output to a file and prints a short summary. Headroom is an optional arm, currently blocked.</span></li>
+    <li class="reveal"><em>2</em><strong>Shrink</strong><span><code>lw run</code> saves long command output to a file and prints a short summary. Headroom is an optional arm, blocked because its docs don't confirm subscription login, and it hasn't been tested yet.</span></li>
     <li class="reveal"><em>3</em><strong>Organize</strong><span>A lean <code>CLAUDE.md</code>, state files, brief and summary templates, a five-agent roster, and a verification gate.</span></li>
     <li class="reveal"><em>4</em><strong>Decide</strong><span>A break-even advisor compares staying, delegating, restarting, and compacting in plain numbers. It recommends and never switches.</span></li>
     <li class="reveal"><em>5</em><strong>Prove</strong><span>Arms from plain Claude Code to the full harness, a written experiment protocol, and a report with quality guardrails beside the cost.</span></li>
@@ -240,7 +240,21 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <h2 class="reveal">See where the tokens went.</h2>
   <div class="term reveal" id="term">
     <div class="term-bar">light-work</div>
-    <pre id="termout" tabindex="0" aria-label="Terminal showing lw usage and lw arm"></pre>
+    <pre id="termout" tabindex="0" aria-label="Terminal showing lw usage and lw arm"><span class="cmd">$ uv run lw usage --by model
+</span>model            requests  input  output  cache_write  cache_read  cache_hit
+claude-opus-5-5        22     48  33,914      126,176   1,722,533      93.2%
+
+<span class="cmd">$ uv run lw arm route
+</span>Arm is now route: Adds delegation to cheaper models.
+agents: test-runner, test-writer, scout, implementer, reviewer
+fragments: routing
+Start a fresh Claude Code session: agents and hooks load at session start.
+
+<span class="cmd">$ uv run lw arm baseline
+</span>Arm is now baseline: Plain Claude Code. Logging only; no agents, behavior hooks, or routing rules.
+agents: (none)
+fragments: (none)
+</pre>
   </div>
   <p class="note reveal">Real output, trimmed, from one session building this project. It isn't an experiment result. Costs stay blank until prices are added to <code>pricing.yaml</code>.</p>
 </div></section>
@@ -249,10 +263,17 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <p class="eyebrow reveal">Where it stands</p>
   <h2 class="reveal">Built. Not yet proven.</h2>
   <div class="progress reveal">
-    <div class="done">
-      <h3>Done</h3>
+    <div class="validated">
+      <h3>Validated in live sessions</h3>
       <ul>
-        <li>Usage analyzer, snapshots, and tagging</li>
+        <li><code>lw usage</code> on a real session transcript</li>
+        <li>Feature and phase tagging on a real request</li>
+      </ul>
+    </div>
+    <div class="built">
+      <h3>Built + unit-tested</h3>
+      <ul>
+        <li>Hook event logging</li>
         <li>Arm switching and experiment protocol</li>
         <li>Agent roster, templates, and routing rules</li>
         <li>Verification gate and output offloading</li>
@@ -263,10 +284,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <h3>Still to do</h3>
       <ul>
         <li>Fill in <code>pricing.yaml</code></li>
-        <li>Run the hooks and agents in live sessions</li>
+        <li>Run the hooks, agents, and gate in live sessions</li>
         <li>Compare a feature in <code>baseline</code> and <code>route</code></li>
         <li>Publish results, whichever way they go</li>
-        <li>Decide on the Headroom arm</li>
+        <li>Headroom arm: blocked, because its docs don't confirm subscription login and it hasn't been tested yet</li>
       </ul>
     </div>
   </div>
@@ -313,7 +334,7 @@ uv run lw usage --feature F1 --by agent</code></pre>
     verify:   { on: ['event log', 'test-writer', 'test-runner', 'stop gate'], note: 'Adds test agents and a Stop hook that sends Claude back once if the fast check fails.' },
     route:    { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer'], note: 'Adds routing rules, so work is delegated to the cheapest capable agent.' },
     offload:  { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Adds guidance to run long commands through lw run, keeping their output out of context.' },
-    headroom: { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Would add Headroom compression. Blocked until it is confirmed to work with a subscription login.' }
+    headroom: { on: ['event log', 'test-writer', 'test-runner', 'stop gate', 'scout', 'implementer', 'reviewer', 'lw run'], note: 'Would add Headroom compression. Blocked: its docs don\'t confirm subscription login, and it hasn\'t been tested yet.' }
   };
 
   var CENTER = { x: 240, y: 240 };
@@ -411,56 +432,36 @@ uv run lw usage --feature F1 --by agent</code></pre>
     reveals.forEach(function (r) { r.classList.add('seen'); });
   }
 
-  // Terminal: types each command, then shows its real output.
-  var SCRIPT = [
-    ['cmd', '$ uv run lw usage --by model'],
-    ['out', 'model            requests  input  output  cache_write  cache_read  cache_hit\nclaude-opus-5-5        22     48  33,914      126,176   1,722,533      93.2%\n'],
-    ['cmd', '$ uv run lw arm route'],
-    ['out', 'Arm is now route: Adds delegation to cheaper models.\nagents: test-runner, test-writer, scout, implementer, reviewer\nfragments: routing\nStart a fresh Claude Code session: agents and hooks load at session start.\n'],
-    ['cmd', '$ uv run lw arm baseline'],
-    ['out', 'Arm is now baseline: Plain Claude Code. Logging only; no agents, behavior hooks, or routing rules.\nagents: (none)\nfragments: (none)']
-  ];
+  // Terminal: the output is already in the HTML. With motion on, replay it as typing.
   var termout = document.getElementById('termout');
-  function line(kind, text) {
-    var s = document.createElement('span');
-    if (kind === 'cmd') s.className = 'cmd';
-    s.textContent = text;
-    termout.appendChild(s);
-    return s;
-  }
-  function printAll() {
-    SCRIPT.forEach(function (row) { line(row[0], row[1] + '\n'); });
-  }
-  function play() {
+  function play(parts) {
+    termout.textContent = '';
     var caret = document.createElement('span');
     caret.className = 'caret';
     termout.appendChild(caret);
     var i = 0;
     (function step() {
-      if (i >= SCRIPT.length) return;
-      var row = SCRIPT[i++];
-      if (row[0] === 'out') {
-        termout.insertBefore(document.createTextNode(row[1] + '\n'), caret);
+      if (i >= parts.length) return;
+      var part = parts[i++];
+      if (part.nodeType === Node.TEXT_NODE) {
+        termout.insertBefore(part, caret);
         setTimeout(step, 750);
         return;
       }
-      var span = document.createElement('span');
-      span.className = 'cmd';
-      termout.insertBefore(span, caret);
+      var text = part.textContent;
+      part.textContent = '';
+      termout.insertBefore(part, caret);
       var c = 0;
       (function type() {
-        span.textContent = row[1].slice(0, ++c);
-        if (c < row[1].length) { setTimeout(type, 34); return; }
-        span.textContent += '\n';
+        part.textContent = text.slice(0, ++c);
+        if (c < text.length) { setTimeout(type, 34); return; }
         setTimeout(step, 330);
       })();
     })();
   }
-  if (reduce || !('IntersectionObserver' in window)) {
-    printAll();
-  } else {
+  if (!reduce && 'IntersectionObserver' in window) {
     var termIO = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { termIO.disconnect(); play(); }
+      if (entries[0].isIntersecting) { termIO.disconnect(); play(Array.prototype.slice.call(termout.childNodes)); }
     }, { threshold: 0.3 });
     termIO.observe(document.getElementById('term'));
   }

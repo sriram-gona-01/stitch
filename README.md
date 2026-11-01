@@ -4,7 +4,7 @@
 
 **[Open the project page →](https://sriram-gona-01.github.io/light-work/)**
 
-A harness for [Claude Code](https://code.claude.com/docs) that aims to cut the token cost of developing a feature without lowering quality. The main session stays on one model with a warm prompt cache, and other work goes to cheaper models through subagents that get just the context they need from files.
+An experiment in cutting [Claude Code](https://code.claude.com/docs)'s token cost without cutting quality. The harness keeps the main session on one model with a warm prompt cache, and sends other work to cheaper models through subagents that get just the context they need from files.
 
 - **Main metric:** cost-weighted tokens per feature lifecycle (plan → build → test).
 - **Guardrails:** tests pass on the first run, and the number of human corrections per feature.
@@ -16,7 +16,7 @@ A harness for [Claude Code](https://code.claude.com/docs) that aims to cut the t
 | Layer | What it does |
 |---|---|
 | **Measure** | Reads Claude Code transcripts, deduplicates usage, and tags it by feature, phase, arm, and agent. |
-| **Shrink** | `lw run` saves long command output to a file and prints a short summary. Headroom is an optional arm, currently blocked. |
+| **Shrink** | `lw run` saves long command output to a file and prints a short summary. Headroom is an optional arm, blocked because its docs don't confirm subscription login and it hasn't been tested yet. |
 | **Organize** | Lean `CLAUDE.md`, state files, brief and summary templates, a subagent roster, and a verification gate. |
 | **Decide** | A break-even advisor that recommends staying, delegating, restarting, or compacting. It never switches models. |
 | **Prove** | Arms from plain Claude Code to the full harness, an experiment protocol, and a report. |
@@ -54,7 +54,7 @@ uv run lw report --features F1 --arms baseline,route
 | `verify` | `test-runner`, `test-writer`, and the verification Stop gate. |
 | `route` | `scout`, `implementer`, `reviewer`, and routing rules. |
 | `offload` | Guidance to use `lw run` for long output. |
-| `headroom` | Headroom compression. **Blocked** until subscription login is confirmed; see [`decisions.md`](docs/context/decisions.md). |
+| `headroom` | Headroom compression. **Blocked:** its docs don't confirm subscription login, and it hasn't been tested yet. See [`decisions.md`](docs/context/decisions.md). |
 
 ## Reproducing a result
 
